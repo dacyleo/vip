@@ -3,14 +3,14 @@
     <div class="mod-vip__shop}">
       <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
         <el-form-item>
-          <el-input v-model="dataForm.id" placeholder="id" clearable></el-input>
+          <el-input v-model="dataForm.name" placeholder="商户名称" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="getDataList()">{{ $t('query') }}</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>
-        </el-form-item>
+<!--        <el-form-item>-->
+<!--          <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>-->
+<!--        </el-form-item>-->
         <el-form-item>
           <el-button v-if="$hasPermission('vip:shop:save')" type="primary" @click="addOrUpdateHandle()">{{ $t('add') }}</el-button>
         </el-form-item>
@@ -20,14 +20,18 @@
       </el-form>
       <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle" style="width: 100%;">
         <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-        <el-table-column prop="id" label="ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="type" label="0：普通商户，1：0元换购商户" header-align="center" align="center"></el-table-column>
+<!--        <el-table-column prop="id" label="ID" header-align="center" align="center"></el-table-column>-->
+        <el-table-column prop="type" :formatter="figureType" label="商户类型" header-align="center" align="center"></el-table-column>
         <el-table-column prop="name" label="商户名称" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="picUrl" label="商户图片" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="content" label="商户简介" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="sysUserId" label="商户管理员ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="createTime" label="" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="picUrl" label="商户图片" header-align="center" align="center">
+          <template slot-scope="scope">
+            <img :src="scope.row.picUrl" width="100" height="60" class="head_pic"/>
+          </template>
+        </el-table-column>
+<!--        <el-table-column prop="content" label="商户简介" header-align="center" align="center"></el-table-column>-->
+<!--        <el-table-column prop="sysUserId" label="商户管理员ID" header-align="center" align="center"></el-table-column>-->
         <el-table-column prop="phone" label="核销员手机号" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间" header-align="center" align="center"></el-table-column>
         <el-table-column :label="$t('handle')" fixed="right" header-align="center" align="center" width="150">
           <template slot-scope="scope">
             <el-button v-if="$hasPermission('vip:shop:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
@@ -71,6 +75,20 @@ export default {
   },
   components: {
     AddOrUpdate
+  },
+  methods: {
+    figureType (row, column) {
+      if (row.type == null) {
+        return ''
+      }
+      if (row.type === 0) {
+        return '普通商户'
+      } else if (row.type === 1) {
+        return '0元购商户'
+      }else {
+        return '未知'
+      }
+    },
   }
 }
 </script>

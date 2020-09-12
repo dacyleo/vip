@@ -1,26 +1,34 @@
 <template>
   <el-dialog :visible.sync="visible" :title="!dataForm.id ? $t('add') : $t('update')" :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmitHandle()" :label-width="$i18n.locale === 'en-US' ? '120px' : '80px'">
-          <el-form-item label="0：普通商户，1：0元换购商户" prop="type">
-          <el-input v-model="dataForm.type" placeholder="0：普通商户，1：0元换购商户"></el-input>
-      </el-form-item>
+        <el-form-item prop="type" label="商户类型" size="mini">
+            <el-radio-group v-model="dataForm.type">
+                <el-radio label="0">普通商户</el-radio>
+                <el-radio label="1">0元换购商户</el-radio>
+            </el-radio-group>
+        </el-form-item>
           <el-form-item label="商户名称" prop="name">
           <el-input v-model="dataForm.name" placeholder="商户名称"></el-input>
       </el-form-item>
-          <el-form-item label="商户图片" prop="picUrl">
-          <el-input v-model="dataForm.picUrl" placeholder="商户图片"></el-input>
-      </el-form-item>
+        <el-form-item label="商户图片" prop="picUrl">
+            <el-upload
+                    class="avatar-uploader"
+                    action=""
+                    :http-request="uploadFileElment"
+                    :show-file-list="false"
+                    :on-success="handleSuccess"
+                    :before-upload="beforeUpload">
+                <img style="width: 94px;height: 94px;"
+                     v-if="dataForm.picUrl" :src="dataForm.picUrl">
+                <img style="width: 94px;height: 94px;" v-else
+                     src="../../../assets/img/update.png">
+            </el-upload>
+        </el-form-item>
           <el-form-item label="商户简介" prop="content">
-          <el-input v-model="dataForm.content" placeholder="商户简介"></el-input>
-      </el-form-item>
-          <el-form-item label="商户管理员ID" prop="sysUserId">
-          <el-input v-model="dataForm.sysUserId" placeholder="商户管理员ID"></el-input>
-      </el-form-item>
-          <el-form-item label="" prop="createTime">
-          <el-input v-model="dataForm.createTime" placeholder=""></el-input>
+          <el-input v-model="dataForm.content" placeholder="请填写如下格式：['简介第一部分','简介第二部分','简介第三部分']"></el-input>
       </el-form-item>
           <el-form-item label="核销员手机号" prop="phone">
-          <el-input v-model="dataForm.phone" placeholder="核销员手机号"></el-input>
+          <el-input v-model="dataForm.phone" placeholder="核销号"></el-input>
       </el-form-item>
       </el-form>
     <template slot="footer">
@@ -32,13 +40,14 @@
 
 <script>
 import debounce from 'lodash/debounce'
+import Cookies from 'js-cookie'
 export default {
   data () {
     return {
       visible: false,
       dataForm: {
         id: '',
-        type: '',
+        type: '0',
         name: '',
         picUrl: '',
         content: '',
@@ -95,8 +104,38 @@ export default {
           ...this.dataForm,
           ...res.data
         }
+        this.dataForm.type = res.data.type.toString()
       }).catch(() => {})
     },
+      handleSuccess: function (res, file) {
+        console.log(res);
+          this.dataForm.picUrl = res.data.data.src
+      },
+      beforeUpload: function (file) {
+          var isJPG = (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png')
+          var isLt2M = file.size / 1024 / 1024 < 2
+
+          if (!isJPG) {
+              this.$message.error("上传图片格式只能是JPG/JPEG/PNG/三种格式！")
+          }
+          if (!isLt2M) {
+              this.$message.error("上传图片大小不能超过 2MB!")
+          }
+          return isJPG && isLt2M
+      },
+      uploadFileElment: function (content) {
+          var form = new FormData()
+          form.append('name', content.file.name)
+          form.append('file', content.file)
+          this.$http.post("/sys/oss/upload?token=" + Cookies.get('token'), form, {
+              timeout: 0,
+              headers: {"Content-Type": "multipart/form-data"}
+          }).then(function (res) {
+              content.onSuccess(res)
+          }, function (error) {
+              content.onError(error)
+          })
+      },
     // 表单提交
     dataFormSubmitHandle: debounce(function () {
       this.$refs['dataForm'].validate((valid) => {
