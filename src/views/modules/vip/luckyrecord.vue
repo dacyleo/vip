@@ -3,36 +3,20 @@
     <div class="mod-vip__luckyrecord}">
       <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
         <el-form-item>
-          <el-input v-model="dataForm.id" placeholder="id" clearable></el-input>
+          <el-input v-model="dataForm.userName" placeholder="用户名称" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="getDataList()">{{ $t('query') }}</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button v-if="$hasPermission('vip:luckyrecord:save')" type="primary" @click="addOrUpdateHandle()">{{ $t('add') }}</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button v-if="$hasPermission('vip:luckyrecord:delete')" type="danger" @click="deleteHandle()">{{ $t('deleteBatch') }}</el-button>
-        </el-form-item>
       </el-form>
-      <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle" style="width: 100%;">
-        <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-        <el-table-column prop="id" label="ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="uid" label="用户ID" header-align="center" align="center"></el-table-column>
+      <el-table v-loading="dataListLoading" :data="dataList" border  style="width: 100%;">
+        <el-table-column prop="userName" label="用户名称" header-align="center" align="center"></el-table-column>
         <el-table-column prop="createTime" label="获得抽奖机会时间" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="refId" label="关联奖品ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="refName" label="中奖产品名称" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="state" label="0机会未使用，1机会已使用" header-align="center" align="center"></el-table-column>
+<!--        <el-table-column prop="refId" label="关联奖品ID" header-align="center" align="center"></el-table-column>-->
+        <el-table-column prop="state" label="抽奖情况" :formatter="formatState" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="refName" label="中奖结果" header-align="center" align="center"></el-table-column>
+
         <el-table-column prop="updateTime" label="抽奖时间" header-align="center" align="center"></el-table-column>
-        <el-table-column :label="$t('handle')" fixed="right" header-align="center" align="center" width="150">
-          <template slot-scope="scope">
-            <el-button v-if="$hasPermission('vip:luckyrecord:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
-            <el-button v-if="$hasPermission('vip:luckyrecord:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">{{ $t('delete') }}</el-button>
-          </template>
-        </el-table-column>
       </el-table>
       <el-pagination
         :current-page="page"
@@ -70,6 +54,21 @@ export default {
   },
   components: {
     AddOrUpdate
+  },
+  methods: {
+    formatState: function (row) {
+      //0机会未使用，1机会已使用
+      if (row.state == null) {
+        return ''
+      }
+      if (row.state === 0) {
+        return '未抽奖'
+      } else if (row.state === 1) {
+        return '已抽奖'
+      }else {
+        return '未知'
+      }
+    }
   }
 }
 </script>
