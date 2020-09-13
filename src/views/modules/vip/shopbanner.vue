@@ -12,10 +12,10 @@
 <!--          <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>-->
 <!--        </el-form-item>-->
         <el-form-item>
-          <el-button v-if="$hasPermission('vip:shopproduct:save')" type="warning" @click="onHandle()">上架</el-button>
+          <el-button v-if="$hasPermission('vip:shopbanner:save')" type="warning" @click="onHandle()">上架</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button v-if="$hasPermission('vip:shopproduct:save')" type="warning" @click="offHandle()">下架
+          <el-button v-if="$hasPermission('vip:shopbanner:save')" type="warning" @click="offHandle()">下架
           </el-button>
         </el-form-item>
         <el-form-item>

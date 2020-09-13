@@ -3,13 +3,13 @@
     <div class="mod-vip__keyassigndetail}">
       <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
         <el-form-item>
-          <el-input v-model="dataForm.id" placeholder="id" clearable></el-input>
+          <el-input v-model="dataForm.userName" placeholder="使用者" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="getDataList()">{{ $t('query') }}</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>
+          <el-button v-if="$hasPermission('vip:keyassigndetail:save')" type="warning" @click="createKey()">生成激活码</el-button>
         </el-form-item>
         <el-form-item>
           <el-button v-if="$hasPermission('vip:keyassigndetail:save')" type="primary" @click="addOrUpdateHandle()">{{ $t('add') }}</el-button>
@@ -20,13 +20,12 @@
       </el-form>
       <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle" style="width: 100%;">
         <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-        <el-table-column prop="id" label="ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="assignId" label="分配ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="sysUserId" label="系统用户ID（sys_user）" header-align="center" align="center"></el-table-column>
+<!--        <el-table-column prop="assignId" label="分配ID" header-align="center" align="center"></el-table-column>-->
+<!--        <el-table-column prop="sysUserId" label="系统用户ID（sys_user）" header-align="center" align="center"></el-table-column>-->
         <el-table-column prop="keyNo" label="激活码" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="state" label="0未使用，1已使用" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="uid" label="使用者ID（vip_user）" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="createTime" label="" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="state" label="使用情况" :formatter="formatState" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="userName" label="使用者" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="createTime" label="生成时间" header-align="center" align="center"></el-table-column>
         <el-table-column prop="usedTime" label="使用时间" header-align="center" align="center"></el-table-column>
         <el-table-column :label="$t('handle')" fixed="right" header-align="center" align="center" width="150">
           <template slot-scope="scope">
@@ -62,6 +61,7 @@ export default {
         getDataListIsPage: true,
         exportURL: '/vip/keyassigndetail/export',
         deleteURL: '/vip/keyassigndetail',
+        keyURL: '/vip/keyassigndetail/create-key',
         deleteIsBatch: true
       },
       dataForm: {
@@ -71,6 +71,43 @@ export default {
   },
   components: {
     AddOrUpdate
-  }
+  },
+  methods: {
+    createKey () {
+      this.$confirm('确定生成激活码?', { 'handle': '生成激活码' }, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.get(`${this.mixinViewModuleOptions.keyURL}`).then(({ data: res }) => {
+          if (res.code !== 0) {
+            return this.$message.error(res.msg)
+          }else{
+            this.$message({
+              message: '"成功生成100个激活码"',
+              type: 'success',
+              duration: 1000,
+              onClose: () => {
+                this.getDataList()
+              }
+            })
+          }
+        }).catch(() => {})
+      })
+
+    },
+    formatState (row, column) {
+      if (row.state == null) {
+        return ''
+      }
+      if (row.state === 0) {
+        return '未使用'
+      } else if (row.state === 1) {
+        return '已使用'
+      }else {
+        return '未知'
+      }
+    },
+  },
 }
 </script>
