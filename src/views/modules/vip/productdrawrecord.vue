@@ -3,41 +3,20 @@
     <div class="mod-vip__productdrawrecord}">
       <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
         <el-form-item>
-          <el-input v-model="dataForm.id" placeholder="id" clearable></el-input>
+          <el-input v-model="dataForm.title" placeholder="优惠券名称" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="getDataList()">{{ $t('query') }}</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button v-if="$hasPermission('vip:productdrawrecord:save')" type="primary" @click="addOrUpdateHandle()">{{ $t('add') }}</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button v-if="$hasPermission('vip:productdrawrecord:delete')" type="danger" @click="deleteHandle()">{{ $t('deleteBatch') }}</el-button>
-        </el-form-item>
       </el-form>
-      <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle" style="width: 100%;">
-        <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-        <el-table-column prop="id" label="ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="productId" label="商品ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="uid" label="领取人ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="openId" label="领取人openid,生成二维码使用，避免uid被劫持(uid目前是连续的)" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="state" label="0未核销1已核销" header-align="center" align="center"></el-table-column>
+      <el-table v-loading="dataListLoading" :data="dataList" border  style="width: 100%;">
+        <el-table-column prop="title" label="优惠券名称" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="userName" label="领取人" header-align="center" align="center"></el-table-column>
         <el-table-column prop="createTime" label="领取时间" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="updateTime" label="核销时间" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="state" label="核销状态" :formatter="formatState" header-align="center" align="center"></el-table-column>
         <el-table-column prop="money" label="核销金额" header-align="center" align="center"></el-table-column>
         <el-table-column prop="adminUid" label="核销人ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="title" label="领用优惠券标题" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="qrcodeContent" label="领用二维码内容" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="imageUrl" label="二维码地址" header-align="center" align="center"></el-table-column>
-        <el-table-column :label="$t('handle')" fixed="right" header-align="center" align="center" width="150">
-          <template slot-scope="scope">
-            <el-button v-if="$hasPermission('vip:productdrawrecord:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
-            <el-button v-if="$hasPermission('vip:productdrawrecord:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">{{ $t('delete') }}</el-button>
-          </template>
-        </el-table-column>
+        <el-table-column prop="updateTime" label="核销时间" header-align="center" align="center"></el-table-column>
       </el-table>
       <el-pagination
         :current-page="page"
@@ -75,6 +54,21 @@ export default {
   },
   components: {
     AddOrUpdate
+  },
+  methods: {
+    //0未核销1已核销
+    formatState: function (row) {
+      if (row.state == null) {
+        return ''
+      }
+      if (row.state === 0) {
+        return '未核销'
+      } else if (row.state === 1) {
+        return '已核销'
+      } else {
+        return '未知'
+      }
+    }
   }
 }
 </script>
