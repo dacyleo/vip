@@ -4,21 +4,13 @@
           <el-form-item label="兑换key" prop="cdKey">
           <el-input v-model="dataForm.cdKey" placeholder="兑换key"></el-input>
       </el-form-item>
-          <el-form-item label="兑换人ID" prop="uid">
-          <el-input v-model="dataForm.uid" placeholder="兑换人ID"></el-input>
+        <el-form-item label="key名称" prop="name">
+            <el-input v-model="dataForm.name" placeholder="兑换key名称"></el-input>
+        </el-form-item>
+          <el-form-item label="key价值" prop="money">
+          <el-input v-model="dataForm.money" placeholder="兑换key价值" type="number"></el-input>
       </el-form-item>
-          <el-form-item label="兑换时间" prop="updateTime">
-          <el-input v-model="dataForm.updateTime" placeholder="兑换时间"></el-input>
-      </el-form-item>
-          <el-form-item label="创建时间" prop="createTime">
-          <el-input v-model="dataForm.createTime" placeholder="创建时间"></el-input>
-      </el-form-item>
-          <el-form-item label="兑换key价值" prop="money">
-          <el-input v-model="dataForm.money" placeholder="兑换key价值"></el-input>
-      </el-form-item>
-          <el-form-item label="兑换key名称" prop="name">
-          <el-input v-model="dataForm.name" placeholder="兑换key名称"></el-input>
-      </el-form-item>
+
       </el-form>
     <template slot="footer">
       <el-button @click="visible = false">{{ $t('cancel') }}</el-button>
@@ -48,15 +40,6 @@ export default {
     dataRule () {
       return {
         cdKey: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        uid: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        updateTime: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        createTime: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         money: [
