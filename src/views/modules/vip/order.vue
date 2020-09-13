@@ -3,41 +3,20 @@
     <div class="mod-vip__order}">
       <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
         <el-form-item>
-          <el-input v-model="dataForm.id" placeholder="id" clearable></el-input>
+          <el-input v-model="dataForm.userName" placeholder="用户名称" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="getDataList()">{{ $t('query') }}</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button v-if="$hasPermission('vip:order:save')" type="primary" @click="addOrUpdateHandle()">{{ $t('add') }}</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button v-if="$hasPermission('vip:order:delete')" type="danger" @click="deleteHandle()">{{ $t('deleteBatch') }}</el-button>
-        </el-form-item>
       </el-form>
-      <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle" style="width: 100%;">
-        <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-        <el-table-column prop="id" label="ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="uid" label="用户ID" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="refId" label="关联ID" header-align="center" align="center"></el-table-column>
+      <el-table v-loading="dataListLoading" :data="dataList" border  style="width: 100%;">
+        <el-table-column prop="userName" label="用户名称" header-align="center" align="center"></el-table-column>
         <el-table-column prop="orderNo" label="订单编号" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="type" label="订单类型: 1购买VIP" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="status" label="订单状态: 1待付款, 2已完成" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="status" label="订单状态" :formatter="formatStatus" header-align="center" align="center"></el-table-column>
         <el-table-column prop="payMoney" label="支付金额" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="payStatus" label="支付状态: 1未支付, 2已支付" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="payType" label="支付类型: 0微信付款" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="payStatus" label="支付状态" :formatter="formatPayStatus" header-align="center" align="center"></el-table-column>
         <el-table-column prop="payTime" label="支付时间" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="remark" label="订单备注" header-align="center" align="center"></el-table-column>
         <el-table-column prop="createTime" label="创建时间" header-align="center" align="center"></el-table-column>
-        <el-table-column :label="$t('handle')" fixed="right" header-align="center" align="center" width="150">
-          <template slot-scope="scope">
-            <el-button v-if="$hasPermission('vip:order:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
-            <el-button v-if="$hasPermission('vip:order:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">{{ $t('delete') }}</el-button>
-          </template>
-        </el-table-column>
       </el-table>
       <el-pagination
         :current-page="page"
@@ -75,6 +54,35 @@ export default {
   },
   components: {
     AddOrUpdate
+  },
+  methods: {
+    //订单状态: 1待付款, 2已完成
+    formatStatus: function (row) {
+      if (row.status == null) {
+        return ''
+      }
+      if (row.status === 1) {
+        return '待付款'
+      } else if (row.status === 2) {
+        return '已完成'
+      }else {
+        return '未知'
+      }
+    },
+    //1未支付, 2已支付
+    formatPayStatus: function (row) {
+      if (row.payStatus == null) {
+        return ''
+      }
+      if (row.payStatus === 1) {
+        return '未支付'
+      } else if (row.payStatus === 2) {
+        return '已支付'
+      }else {
+        return '未知'
+      }
+    }
+
   }
 }
 </script>
