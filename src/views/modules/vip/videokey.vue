@@ -3,14 +3,11 @@
     <div class="mod-vip__videokey}">
       <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
         <el-form-item>
-          <el-input v-model="dataForm.id" placeholder="id" clearable></el-input>
+          <el-input v-model="dataForm.userName" placeholder="兑换人" clearable></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="getDataList()">{{ $t('query') }}</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>
-        </el-form-item>
+        <el-button @click="getDataList()">{{ $t('query') }}</el-button>
+      </el-form-item>
         <el-form-item>
           <el-button v-if="$hasPermission('vip:videokey:save')" type="primary" @click="addOrUpdateHandle()">{{ $t('add') }}</el-button>
         </el-form-item>
@@ -20,17 +17,16 @@
       </el-form>
       <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle" style="width: 100%;">
         <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-        <el-table-column prop="id" label="ID" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="name" label="兑换key名称" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="money" label="兑换key价值(元）" header-align="center" align="center"></el-table-column>
         <el-table-column prop="cdKey" label="兑换key" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="uid" label="兑换人ID" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="userName" label="兑换人" header-align="center" align="center"></el-table-column>
         <el-table-column prop="updateTime" label="兑换时间" header-align="center" align="center"></el-table-column>
         <el-table-column prop="createTime" label="创建时间" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="money" label="兑换key价值" header-align="center" align="center"></el-table-column>
-        <el-table-column prop="name" label="兑换key名称" header-align="center" align="center"></el-table-column>
         <el-table-column :label="$t('handle')" fixed="right" header-align="center" align="center" width="150">
           <template slot-scope="scope">
-            <el-button v-if="$hasPermission('vip:videokey:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
-            <el-button v-if="$hasPermission('vip:videokey:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">{{ $t('delete') }}</el-button>
+            <el-button v-if="scope.row.uid == 0" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
+            <el-button v-if="scope.row.uid == 0" type="text" size="small" @click="deleteHandle(scope.row.id)">{{ $t('delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
