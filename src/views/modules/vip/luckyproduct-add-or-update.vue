@@ -1,14 +1,14 @@
 <template>
   <el-dialog :visible.sync="visible" :title="!dataForm.id ? $t('add') : $t('update')" :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmitHandle()" :label-width="$i18n.locale === 'en-US' ? '120px' : '80px'">
-          <el-form-item label="抽奖名称" prop="name">
-          <el-input v-model="dataForm.name" placeholder="抽奖名称"></el-input>
+          <el-form-item label="奖项" prop="name">
+          <el-input v-model="dataForm.name" placeholder="奖项"></el-input>
       </el-form-item>
-          <el-form-item label="抽奖内容" prop="content">
-          <el-input v-model="dataForm.content" placeholder="抽奖内容"></el-input>
+          <el-form-item label="奖项内容" prop="content">
+          <el-input v-model="dataForm.content" placeholder="奖项内容"></el-input>
       </el-form-item>
-          <el-form-item label="" prop="rate">
-          <el-input v-model="dataForm.rate" placeholder=""></el-input>
+          <el-form-item label="中奖概率" prop="rate">
+          <el-input v-model="dataForm.rate" placeholder="" type="number"></el-input>
       </el-form-item>
       </el-form>
     <template slot="footer">
