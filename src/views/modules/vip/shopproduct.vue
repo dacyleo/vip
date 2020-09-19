@@ -41,6 +41,11 @@
             <img :src="scope.row.picUrl" width="100" height="60" class="head_pic"/>
           </template>
         </el-table-column>
+        <el-table-column prop="couponImage" label="优惠券图片" header-align="center" align="center">
+          <template slot-scope="scope">
+            <img :src="scope.row.couponImage" width="100" height="60" class="head_pic"/>
+          </template>
+        </el-table-column>
         <el-table-column :label="$t('handle')" fixed="right" header-align="center" align="center" width="150">
           <template slot-scope="scope">
             <el-button v-if="$hasPermission('vip:shopproduct:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>

@@ -25,6 +25,20 @@
                          src="../../../assets/img/update.png">
                 </el-upload>
             </el-form-item>
+            <el-form-item label="优惠券图片" prop="picUrl">
+                <el-upload
+                        class="avatar-uploader"
+                        action=""
+                        :http-request="uploadFileElment"
+                        :show-file-list="false"
+                        :on-success="handleSuccess2"
+                        :before-upload="beforeUpload">
+                    <img style="width: 94px;height: 94px;"
+                         v-if="dataForm.couponImage" :src="dataForm.couponImage">
+                    <img style="width: 94px;height: 94px;" v-else
+                         src="../../../assets/img/update.png">
+                </el-upload>
+            </el-form-item>
             <el-form-item label="优惠券简介" prop="title">
                 <el-input v-model="dataForm.title" placeholder="优惠券简介"></el-input>
             </el-form-item>
@@ -56,7 +70,8 @@
                     verifyAmount: '',
                     createTime: '',
                     state: '',
-                    picUrl: ''
+                    picUrl: '',
+                    couponImage: ''
                 },
                 shopList: []
             }
@@ -132,6 +147,9 @@
             },
             handleSuccess: function (res, file) {
                 this.dataForm.picUrl = res.data.data.src
+            },
+            handleSuccess2: function (res, file) {
+                this.dataForm.couponImage = res.data.data.src
             },
             beforeUpload: function (file) {
                 var isJPG = (file.type === 'image/jpeg' || file.type === 'image/png')
