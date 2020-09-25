@@ -5,12 +5,23 @@
         <el-form-item>
           <el-input v-model="dataForm.userName" placeholder="使用者" clearable></el-input>
         </el-form-item>
+          <el-form-item>
+              使用情况:
+              <el-select v-model="dataForm.state" placeholder="使用情况" clearable >
+                  <el-option label="全部" value=""></el-option>
+                  <el-option label="未使用" value="0"></el-option>
+                  <el-option label="已使用" value="1"></el-option>
+              </el-select>
+          </el-form-item>
         <el-form-item>
           <el-button @click="getDataList()">{{ $t('query') }}</el-button>
         </el-form-item>
         <el-form-item>
           <el-button v-if="$hasPermission('vip:keyassigndetail:save')" type="warning" @click="createKey()">生成激活码</el-button>
         </el-form-item>
+          <el-form-item>
+              <el-button v-if="$hasPermission('vip:keyassigndetail:save')" type="warning" @click="addOrUpdateHandle()()">发送激活码</el-button>
+          </el-form-item>
       </el-form>
       <el-table v-loading="dataListLoading" :data="dataList" border style="width: 100%;">
 <!--        <el-table-column prop="assignId" label="分配ID" header-align="center" align="center"></el-table-column>-->
@@ -18,6 +29,7 @@
         <el-table-column prop="keyNo" label="激活码" header-align="center" align="center"></el-table-column>
         <el-table-column prop="state" label="使用情况" :formatter="formatState" header-align="center" align="center"></el-table-column>
         <el-table-column prop="userName" label="使用者" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="phone" label="手机号" header-align="center" align="center"></el-table-column>
         <el-table-column prop="createTime" label="生成时间" header-align="center" align="center"></el-table-column>
         <el-table-column prop="usedTime" label="使用时间" header-align="center" align="center"></el-table-column>
       </el-table>

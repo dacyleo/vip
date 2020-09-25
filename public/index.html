@@ -30,19 +30,18 @@
   <!-- 开发环境 -->
   <% if (process.env.VUE_APP_NODE_ENV === 'dev') { %>
     <script>window.SITE_CONFIG['apiURL'] = 'http://localhost:18001/admin/api/';</script>
-<!--    <script>window.SITE_CONFIG['apiURL'] = 'http://jxb.prodapi.cn/admin/api/';</script>-->
   <% } %>
   <!-- 集成测试环境 -->
   <% if (process.env.VUE_APP_NODE_ENV === 'prod:sit') { %>
-    <script>window.SITE_CONFIG['apiURL'] = 'http://localhost:8080/admin/api/';</script>
+    <script>window.SITE_CONFIG['apiURL'] = 'https://qadmin.whichbank.com.cn/admin/api/';</script>
   <% } %>
   <!-- 验收测试环境 -->
   <% if (process.env.VUE_APP_NODE_ENV === 'prod:uat') { %>
-    <script>window.SITE_CONFIG['apiURL'] = 'https://jxb.prodapi.cn/admin/api/';</script>
+    <script>window.SITE_CONFIG['apiURL'] = 'https://qadmin.whichbank.com.cn/admin/api/';</script>
   <% } %>
   <!-- 生产环境 -->
   <% if (process.env.VUE_APP_NODE_ENV === 'prod') { %>
-    <script>window.SITE_CONFIG['apiURL'] = 'https://jxb.showyiu.com/admin/api/';</script>
+    <script>window.SITE_CONFIG['apiURL'] = 'https://qadmin.whichbank.com.cn/admin/api/';</script>
   <% } %>
 </head>
 <body>
