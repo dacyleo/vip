@@ -44,7 +44,7 @@
                     if (!valid) {
                         return false
                     }
-                    this.$http['post']('/vip/keyassigndetail/send-key', this.dataForm).then(({data: res}) => {
+                    this.$http['post']('/vip/keyassigndetail/send-key?phoneStr='+this.dataForm.phoneStr).then(({data: res}) => {
                         if (res.code !== 0) {
                             return this.$message.error(res.msg)
                         }
